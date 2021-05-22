@@ -453,7 +453,7 @@ public class Deck : MonoBehaviour
             {
                 probObtenerValorCercano21 += ProbSacarValor(NumeroEntre17y21[i]);
             }
-            textProb += "Probabilidad sacar entre 17 y 21 con la siguiente carta: " + (probObtenerValorCercano21 * 100).ToString("0.00") + "%\n";
+            textProb += "Probabilidad de sacar entre 17 y 21 con la siguiente carta: " + (probObtenerValorCercano21 * 100).ToString("0.00") + "%\n";
 
 
             float probObtenerValorMayor21 = 0.0f;
@@ -462,7 +462,7 @@ public class Deck : MonoBehaviour
             {
                 probObtenerValorMayor21 += ProbSacarValor(numerosMayor21[i]);
             }
-            textProb += "Probabilidad sacar más de 21 con la siguiente carta: " + (probObtenerValorMayor21 * 100).ToString("0.00") + "%";
+            textProb += "Probabilidad de pasarse de 21 con la siguiente carta: " + (probObtenerValorMayor21 * 100).ToString("0.00") + "%";
 
             probMessage.text = textProb;
         }
