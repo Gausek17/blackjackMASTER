@@ -445,7 +445,7 @@ public class Deck : MonoBehaviour
                 //Prob de que la carta en juego sea uno de los numeros que supera el valor del jugador
                 probaDealerMayorPuntucaion += ProbSacarValor(numerosSuperarDealer[i]);
             }
-            textProb += "Probabilidad de que el dealer tenga mayor puntuación: " + (probaDealerMayorPuntucaion * 100).ToString("0.00") + "%\n";
+            textProb += "Prob dealer mayor puntuación: " + (probaDealerMayorPuntucaion * 100).ToString("0.00") + "%\n";
 
             float probObtenerValorCercano21 = 0.0f;
             List<int> NumeroEntre17y21 = NumerosParaSacaraValorEntre17y21(player.GetComponent<CardHand>().points);
@@ -453,7 +453,7 @@ public class Deck : MonoBehaviour
             {
                 probObtenerValorCercano21 += ProbSacarValor(NumeroEntre17y21[i]);
             }
-            textProb += "Probabilidad de sacar entre 17 y 21 con la siguiente carta: " + (probObtenerValorCercano21 * 100).ToString("0.00") + "%\n";
+            textProb += "Prob carta entre 17 y 21: " + (probObtenerValorCercano21 * 100).ToString("0.00") + "%\n";
 
 
             float probObtenerValorMayor21 = 0.0f;
@@ -462,7 +462,7 @@ public class Deck : MonoBehaviour
             {
                 probObtenerValorMayor21 += ProbSacarValor(numerosMayor21[i]);
             }
-            textProb += "Probabilidad de pasarse de 21 con la siguiente carta: " + (probObtenerValorMayor21 * 100).ToString("0.00") + "%";
+            textProb += "Prob de pasarse con la siguiente carta: " + (probObtenerValorMayor21 * 100).ToString("0.00") + "%";
 
             probMessage.text = textProb;
         }
