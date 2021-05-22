@@ -107,8 +107,8 @@ public class Deck : MonoBehaviour
     {
         if (saldo > 0)
         {
-            saldo = saldo - 15;
-            saldoEnJuego = saldoEnJuego + 15;
+            saldo = saldo - 10;
+            saldoEnJuego = saldoEnJuego + 10;
             actualizarTextoSaldo();
         }
 
@@ -143,8 +143,8 @@ public class Deck : MonoBehaviour
     {
         if (saldoEnJuego > 0)
         {
-            saldo = saldo + 15;
-            saldoEnJuego = saldoEnJuego - 15;
+            saldo = saldo + 10;
+            saldoEnJuego = saldoEnJuego - 10;
             actualizarTextoSaldo();
         }
 
@@ -264,7 +264,7 @@ public class Deck : MonoBehaviour
         dealer.GetComponent<CardHand>().Push(deckInGame[cardIndex], GetNumberFromSprite(deckInGame[cardIndex]));
         cardIndex++;
         Debug.Log("puntos deler: " + dealer.GetComponent<CardHand>().points);
-        CalculateProbabilities();
+        CalcularProbabilidades();
     }
 
     void PushPlayer()
@@ -274,7 +274,7 @@ public class Deck : MonoBehaviour
          */
         player.GetComponent<CardHand>().Push(deckInGame[cardIndex], GetNumberFromSprite(deckInGame[cardIndex]));
         cardIndex++;
-        CalculateProbabilities();
+        CalcularProbabilidades();
 
         Debug.Log("puntos del jugador: " + player.GetComponent<CardHand>().points);
 
@@ -421,7 +421,7 @@ public class Deck : MonoBehaviour
 
     }
 
-    private void CalculateProbabilities()
+    private void CalcularProbabilidades()
     {
         /*TODO:
          * Calcular las probabilidades de:
