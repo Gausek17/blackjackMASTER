@@ -392,7 +392,7 @@ public class Deck : MonoBehaviour
 
         if (saldo == 0)
         {
-            finalMessage.text = "No tienes dinero para jugar";
+            finalMessage.text = "Pierdes!! No tienes dinero para jugar";
             playAgainButton.interactable = false;
         }
 
