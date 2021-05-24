@@ -92,7 +92,7 @@ public class Deck : MonoBehaviour
         hitButton.interactable = !state;
         stickButton.interactable = !state;
 
-        //SI STATE ES TRYE
+        //SI STATE ES TRUE
         if (state == true)
         {
             //MENSAJE PARA APOSTAR 
@@ -415,11 +415,13 @@ public class Deck : MonoBehaviour
     {
         //mostramos el resultado por mensaje
         bool lose = true;
+        bool empate = false;
         if (result == ResultGame.Tie)
         {
             finalMessage.text = "Tablas";
             finalMessage.color = Color.red;
             lose = false;
+            empate = true;
         }
         else if (result == ResultGame.PlayerWin)
         {
@@ -441,7 +443,9 @@ public class Deck : MonoBehaviour
 
         }
 
-        if (lose == false)
+        
+
+        if (lose == false && empate==false)
         {
             //si gana recibe el doble de dinero apostado
             dinero = dinero + (saldoEnJuego * 2);
@@ -511,7 +515,7 @@ public class Deck : MonoBehaviour
         return res;
     }
 
-
+    //SIGUIENTE CARTA MAS DE 21
     private float Mas21()
     {
 
@@ -569,9 +573,8 @@ public class Deck : MonoBehaviour
         {
 
             
-            //
-           
-
+            //DEALER SIN CARTA INICIAL
+         
             int punuacionDealerSinCartaInicial = dealer.GetComponent<CardHand>().points - dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().value;
 
             
