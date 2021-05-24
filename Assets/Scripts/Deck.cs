@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System;
+using Random = UnityEngine.Random;
 
 public class Deck : MonoBehaviour
 {
@@ -17,8 +19,9 @@ public class Deck : MonoBehaviour
     public Button buttonAllin;
 
     public Text finalMessage;
-    public Text probMessage;
-    public Text textProb;
+    
+    public Text textProbabilidad;
+    public Text textProbabilidad2;
     public Text textSaldoActual;
     public Text textSaldoEnJuego;
     public int[] values = new int[52];
@@ -46,6 +49,7 @@ public class Deck : MonoBehaviour
         dinero = 1000;
         saldoEnJuego = 0;
         actualizarTextoSaldo();
+        
     }
 
     //actualizamos el saldo del jugador
@@ -473,7 +477,7 @@ public class Deck : MonoBehaviour
         //StartGame();
     }
 
-    //METODO PROB DE QUE SALGAN NUMEROS
+    //METODO PROB DE QUE SALGAN NUMEROS 17 A 21
     private float Prob17a21(int valor)
     {
         //CALCULAMOS EL NUMERO DE CARTAS QUE HAY EN EL MAZO
@@ -504,6 +508,28 @@ public class Deck : MonoBehaviour
         float res = (float)contadorCartas / (float)numeroCartasMazo;
         //DEVOLVEMOS EL RESULTADO
         return res;
+    }
+
+
+    private float Mas21()
+    {
+
+        int cartasMas21 = 13 - (21 - player.GetComponent<CardHand>().points);
+        float probMas21 = cartasMas21 / 13f;
+
+        
+
+        //CASO MAS DE 100%
+        if (probMas21 > 1)
+        {
+            probMas21 = 1;
+        }else if(probMas21 < 0)
+        {
+            probMas21 = 0;
+        }
+
+        textProbabilidad2.text = "Prob mas de 21 siguiente carta: " + Math.Round(probMas21 * 100).ToString() + "%";
+        return probMas21;
     }
 
     
@@ -541,9 +567,9 @@ public class Deck : MonoBehaviour
         if (dealer.GetComponent<CardHand>().cards.Count >= 1)
         {
 
-            string textProb = "";
+            
             //
-           // float probaDealerMayorPuntucaion = 0.0f;
+           
 
             int punuacionDealerSinCartaInicial = dealer.GetComponent<CardHand>().points - dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().value;
 
@@ -558,12 +584,13 @@ public class Deck : MonoBehaviour
                 probObtenerValorCercano21 += Prob17a21(NumeroEntre17y21[i]);
             }
             //lo mostramos en el text box
-            textProb += "Probabilidad sacar entre 17 y 21 con la siguiente carta: " + (probObtenerValorCercano21 * 100).ToString("0.00") + "%";
+
+            textProbabilidad.text = "Probabilidad sacar entre 17 y 21 con la siguiente carta: " + (probObtenerValorCercano21 * 100).ToString("0.00") + "%";
 
 
            
         }
-
+        Mas21();
 
 
     }
