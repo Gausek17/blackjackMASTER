@@ -35,9 +35,10 @@ public class Deck : MonoBehaviour
         BlackjackPlayerLose = 4
     }
 
-    private bool jugadorGana;
 
 
+
+    //STATS INICIALES
     private void Awake()
     {
         InitCardValues();
@@ -59,7 +60,7 @@ public class Deck : MonoBehaviour
         ShuffleCards();
         Apuesta(true);
     }
-    
+
     //boton para apostar
     public void buttonApostar()
     {
@@ -85,7 +86,7 @@ public class Deck : MonoBehaviour
         playAgainButton.interactable = !state;
         hitButton.interactable = !state;
         stickButton.interactable = !state;
-        
+
         //SI STATE ES TRYE
         if (state == true)
         {
@@ -108,7 +109,7 @@ public class Deck : MonoBehaviour
 
     }
 
-    //añadimos 15 a la apuesta
+    //añadimos 10 a la apuesta
     public void ButtonAdd15()
     {
         if (dinero > 0)
@@ -168,7 +169,7 @@ public class Deck : MonoBehaviour
         }
 
     }
-    
+
 
     //iniciamos los valores de las cartas
     private void InitCardValues()
@@ -196,7 +197,7 @@ public class Deck : MonoBehaviour
             {
                 values[initPos] = 10;
             }
-            //si no es mayor que 10
+            //si no es mayor que 10 vladra su posicion
             else
             {
                 values[initPos] = i;
@@ -214,20 +215,23 @@ public class Deck : MonoBehaviour
         //RECORREMOS EN BUCLE LA LONGITUD DE LAS CARTAS
         for (int i = 0; i < faces.Length; i++)
         {
-            //AÑADIMOS LA IMAGEN SEGUN SU POSICION
+            //AÑADIMOS LA CARTA SEGUN SU POSICION
             deckInGame.Add(faces[i]);
         }
 
         Sprite spriteTmp;
         int n = deckInGame.Count;
-        //Ordena aleatoriamente los valores de la lista
-        //Recorre todas las posiciones de la lista y intercambia cada casilla por otra aleatoria
+
+
+
         //mientras la cuenta sea mayor que 1
         while (n > 1)
         {
             //restamos uno a n
             n--;
+            //Ordena de manera aleatoria los valores de la lista
             int k = Random.Range(0, n + 1);
+            //Recorre todas las posiciones de la lista y intercambia cada casilla por otra aleatoria
             spriteTmp = deckInGame[k];
             deckInGame[k] = deckInGame[n];
             deckInGame[n] = spriteTmp;
@@ -238,17 +242,17 @@ public class Deck : MonoBehaviour
     private int GetNumberFromSprite(Sprite sprite)
     {
         //iniciamos semaforo en true
-        bool semaforo = true;
+        bool light = true;
         //el numero a -1
         int number = -1;
-        for (int i = 0; i < faces.Length && semaforo; i++)
+        for (int i = 0; i < faces.Length && light; i++)
         {
             if (faces[i] == sprite)
             {
                 //el numero sera la posicion
                 number = values[i];
                 //ponemos el semaforo en false
-                semaforo = false;
+                light = false;
             }
         }
         //devolvemos el numero
@@ -284,8 +288,7 @@ public class Deck : MonoBehaviour
         cardIndex++;
         //calculamos los puntos
         Debug.Log("puntos dealer: " + dealer.GetComponent<CardHand>().points);
-        //llamamos al metodo de probabilidades
-        CalcularProbabilidades();
+
     }
 
     void PushPlayer()
@@ -298,8 +301,7 @@ public class Deck : MonoBehaviour
         player.GetComponent<CardHand>().Push(deckInGame[cardIndex], GetNumberFromSprite(deckInGame[cardIndex]));
         //sumamos una carta repartida
         cardIndex++;
-        //llamamos al metodo de probabilidades
-        CalcularProbabilidades();
+
         //calculamos los puntos
         Debug.Log("puntos del jugador: " + player.GetComponent<CardHand>().points);
 
@@ -340,6 +342,7 @@ public class Deck : MonoBehaviour
         ComprobarBlackJack();
     }
 
+    //plantarse
     public void Stand()
     {
         /*TODO: 
@@ -438,10 +441,12 @@ public class Deck : MonoBehaviour
             dinero = dinero + (saldoEnJuego * 2);
             finalMessage.color = Color.yellow;
         }
+
         else
         {
             finalMessage.color = Color.red;
         }
+
         saldoEnJuego = 0;
         actualizarTextoSaldo();
         dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
@@ -451,6 +456,7 @@ public class Deck : MonoBehaviour
         if (dinero == 0)
         {
             finalMessage.text = "Pierdes!! No tienes dinero para jugar";
+            //no puedes volver a jugar
             playAgainButton.interactable = false;
         }
 
@@ -467,128 +473,5 @@ public class Deck : MonoBehaviour
     }
 
 
-    
-    //calculamos probabilidades
-    private void CalcularProbabilidades()
-    {
-        /*TODO:
-         * Calcular las probabilidades de:
-         * - Teniendo la carta oculta, probabilidad de que el dealer tenga más puntuación que el jugador
-         * - Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
-         * - Probabilidad de que el jugador obtenga más de 21 si pide una carta          
-         */
-
-        // si el dealer tiene una o mas cartas
-        if (dealer.GetComponent<CardHand>().cards.Count >= 1)
-        {
-            //texto de probabilidades
-            string textProb = "";
-            float probDealerMasPuntuacion = 0.0f;//float
-            //calculamos la prob del dealer sin la carta inicial
-            int puntuacionDealerSinPrimCarta = dealer.GetComponent<CardHand>().points - dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().value;
-
-            //numeros para superar la puntuacion del dealer
-            List<int> numerosSuperarDealer = NumerosParaSuperarValorConcreto(puntuacionDealerSinPrimCarta, player.GetComponent<CardHand>().points);
-            for (int i = 0; i < numerosSuperarDealer.Count; i++)
-            {
-                //Prob de que la carta en juego sea uno de los numeros que supera el valor del jugador
-                probDealerMasPuntuacion += ProbSacarValor(numerosSuperarDealer[i]);
-            }
-            textProb += "Prob dealer mayor puntuación: " + (probDealerMasPuntuacion * 100).ToString("0.00") + "%\n";
-            //prob valor cercano a 21
-            float probObtenerValorCercano21 = 0.0f;
-            //numeros entre 17 a 21 seran igual al numero de points que lleve en la mano
-            List<int> NumeroEntre17y21 = NumerosEntre17y21(player.GetComponent<CardHand>().points);
-            //recorremos las posibilidades
-            for (int i = 0; i < NumeroEntre17y21.Count; i++)
-            {
-                //usamos el metodo probsacarvalor para un numero entre 17 y 21
-                probObtenerValorCercano21 += ProbSacarValor(NumeroEntre17y21[i]);
-            }
-            textProb += "Prob carta entre 17 y 21: " + (probObtenerValorCercano21 * 100).ToString("0.00") + "%\n";
-
-            //prob valor mayor a 21 en la mano actual
-            float probObtenerValorMayor21 = 0.0f;
-            //numero carta siguiente mayor a 21
-            List<int> numerosMayor21 = NumerosParaSuperarValorConcreto(player.GetComponent<CardHand>().points, 21);
-            for (int i = 0; i < numerosMayor21.Count; i++)
-            {
-                probObtenerValorMayor21 += ProbSacarValor(numerosMayor21[i]);
-            }
-            textProb += "Prob de pasarse con la siguiente carta: " + (probObtenerValorMayor21 * 100).ToString("0.00") + "%";
-
-            //mostramos por pantalla las probabilidades
-            probMessage.text = textProb;
-        }
-
-
-
-    }
-
-    private float ProbSacarValor(int valor)
-    {
-
-        //iniciamos una variable que nos dice cuantas cartas quedan en el mazo segun las cartas repartidas
-        int numeroCartasEnElMazo = (deckInGame.Count - cardIndex) + 1;
-        //inicializamos un contador a 0
-        int contadorCarta = 0;
-        List<Sprite> copyDeck = new List<Sprite>();
-        for (int i = cardIndex; i < deckInGame.Count; i++)
-        {
-            copyDeck.Add(deckInGame[i]);
-        }
-
-        //Añadimos a los calculos la carta del dealer porque no sabemos que carta es
-        copyDeck.Add(dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().front);
-
-        for (int i = 0; i < copyDeck.Count; i++)
-        {
-            if (GetNumberFromSprite(copyDeck[i]) == valor)
-            {
-                //añadamos uno al contador
-                contadorCarta++;
-            }
-        }
-        //el resultado sera la division del contador de cartas con el numero de cartas en el mazo
-        float res = (float)contadorCarta / (float)numeroCartasEnElMazo;
-        //devolvemos el resultado
-        return res;
-    }
-
-    private List<int> NumerosParaSuperarValorConcreto(int valorInicial, int valorConcreto)
-    {
-        //iniciamos una lista de enteros con los valores
-        List<int> valores = new List<int>();
-        //recorremos la lista 
-        for (int i = 1; i <= 10; i++)
-        {
-            //si el valor inicial mas la posicion es mayor que el valor concreto
-            if (valorInicial + i > valorConcreto)
-            {
-                //añadimos el valor
-                valores.Add(i);
-            }
-        }
-        //devolvemos los valores
-        return valores;
-    }
-
-    private List<int> NumerosEntre17y21(int valorInicial)
-    {
-        //iniciamos una lista de enteros con los valores
-        List<int> valores = new List<int>();
-        //recorremos la lista
-        for (int i = 1; i <= 10; i++)
-        {
-            //si el valor inicial mas la posicion está ente 17 y 21
-            if (valorInicial + i >= 17 && valorInicial + i <= 21)
-            {
-                //añadimos el valor a la lista
-                valores.Add(i);
-            }
-        }
-        //devolvemos los valores
-        return valores;
-    }
-
 }
+   
