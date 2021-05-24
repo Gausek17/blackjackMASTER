@@ -18,6 +18,7 @@ public class Deck : MonoBehaviour
 
     public Text finalMessage;
     public Text probMessage;
+    public Text textProb;
     public Text textSaldoActual;
     public Text textSaldoEnJuego;
     public int[] values = new int[52];
@@ -288,7 +289,7 @@ public class Deck : MonoBehaviour
         cardIndex++;
         //calculamos los puntos
         Debug.Log("puntos dealer: " + dealer.GetComponent<CardHand>().points);
-
+        CalculateProbabilities();
     }
 
     void PushPlayer()
@@ -301,7 +302,7 @@ public class Deck : MonoBehaviour
         player.GetComponent<CardHand>().Push(deckInGame[cardIndex], GetNumberFromSprite(deckInGame[cardIndex]));
         //sumamos una carta repartida
         cardIndex++;
-
+        CalculateProbabilities();
         //calculamos los puntos
         Debug.Log("puntos del jugador: " + player.GetComponent<CardHand>().points);
 
