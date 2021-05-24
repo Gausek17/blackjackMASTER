@@ -419,6 +419,7 @@ public class Deck : MonoBehaviour
         {
             finalMessage.text = "Tablas";
             finalMessage.color = Color.red;
+            lose = false;
         }
         else if (result == ResultGame.PlayerWin)
         {
