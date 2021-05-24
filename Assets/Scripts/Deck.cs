@@ -472,6 +472,106 @@ public class Deck : MonoBehaviour
         //StartGame();
     }
 
+    //METODO PROB DE QUE SALGAN NUMEROS
+    private float Prob17a21(int valor)
+    {
+        //CALCULAMOS EL NUMERO DE CARTAS QUE HAY EN EL MAZO
+        int numeroCartasMazo = (deckInGame.Count - cardIndex) + 1;
+        //INICIAMOS CONTADOR CARTAS A 0
+        int contadorCartas = 0;
+        //HACEMOS UNA LISTA COPIANDO NUESTRO DECK
+        List<Sprite> copyDeck = new List<Sprite>();
+        for (int i = cardIndex; i < deckInGame.Count; i++)
+        {
+            //PONEMOS EL DECK SEGUN LA PARTIDA
+            copyDeck.Add(deckInGame[i]);
+        }
+
+        //AÑADIMOS LA CARTA DEL DEALER QUE NO SABEMOS CUAL ES
+        copyDeck.Add(dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().front);
+
+        for (int i = 0; i < copyDeck.Count; i++)
+        {
+            //SI ES IGUAL AL VALOR QUE QUEREMOS LA CARTA DEL DECK
+            if (GetNumberFromSprite(copyDeck[i]) == valor)
+            {
+                //AÑADIMOS UNA UNIDAD AL CONTADOR
+                contadorCartas++;
+            }
+        }
+        //EL RESULTADO SERA LA DIVISION ENTRE EL CONTADOR DE CARTAS Y EL NUMERO DE CARTAS QUE QUEDAN EN EL MAZO
+        float res = (float)contadorCartas / (float)numeroCartasMazo;
+        //DEVOLVEMOS EL RESULTADO
+        return res;
+    }
+
+    
+
+
+    //HACEMOS LISTA DE NUMEROS PARA SACAR ENTRE 17 Y 21 Y LE PASAMOS EL VALOR INICIAL
+    private List<int> SiguienteCartaEntre17y21(int valorInicial)
+    {
+        List<int> valores = new List<int>();
+        //RECORREMOS HASTA LA DECIMA POSICION
+        for (int i = 1; i <= 10; i++)
+        {
+            //SI EL VALOR INICIAL MAS LA SIGUIENTE CARTA SUMA ENTRE 17 A 21
+            if (valorInicial + i >= 17 && valorInicial + i <= 21)
+            {
+                //AÑADIMOS LOS VALORES A LA LISTA CREADA
+                valores.Add(i);
+            }
+        }
+        //DEVOLVEMOS LOS VALORES
+        return valores;
+    }
+
+
+
+    //METODO PROBABILIDADES
+    private void CalculateProbabilities()
+    {
+        /*TODO:
+         * Calcular las probabilidades de:
+         * - Teniendo la carta oculta, probabilidad de que el dealer tenga más puntuación que el jugador
+         * - Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
+         * - Probabilidad de que el jugador obtenga más de 21 si pide una carta          
+         */
+        if (dealer.GetComponent<CardHand>().cards.Count >= 1)
+        {
+
+            string textProb = "";
+            //
+           // float probaDealerMayorPuntucaion = 0.0f;
+
+            int punuacionDealerSinCartaInicial = dealer.GetComponent<CardHand>().points - dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().value;
+
+            
+
+            float probObtenerValorCercano21 = 0.0f;
+            //lista de numeros siguientes que pueden darnos un valor entre 17 y 21
+            List<int> NumeroEntre17y21 = SiguienteCartaEntre17y21(player.GetComponent<CardHand>().points);
+            for (int i = 0; i < NumeroEntre17y21.Count; i++)
+            {
+                //llamamos al metodo anterior
+                probObtenerValorCercano21 += Prob17a21(NumeroEntre17y21[i]);
+            }
+            //lo mostramos en el text box
+            textProb += "Probabilidad sacar entre 17 y 21 con la siguiente carta: " + (probObtenerValorCercano21 * 100).ToString("0.00") + "%";
+
+
+           
+        }
+
+
+
+    }
+
+    /////////////////////
+    
+    
+    
+
 
 }
    
